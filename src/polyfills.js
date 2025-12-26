@@ -1,14 +1,19 @@
 // polyfills
 
 // MAP
-Array.prototype.myMap = function (cb) {
-  let temp = [];
+Array.prototype.myMap = function (callbackFn, thisArg) {
+  const arr = [];
   for (let i = 0; i < this.length; i++) {
-    temp.push(cb(this[i], i, temp));
+    if (i in this) {
+      // if we used this[i] it would have skipped 0 since it is falsy,
+      // now this only skips sparse elements like [0, , 2]
+      arr[i] = callbackFn.call(thisArg, this[i], i, this);
+      // dont use push, push wont preserve sparse element as it is and reduce total length
+      // use arr[i] instead
+    }
   }
-  return temp;
+  return arr;
 };
-
 // FILTER
 Array.prototype.myFilter = function (callbackFn, thisArg) {
   // thisArg is the this env for callbackFn, it is optional
