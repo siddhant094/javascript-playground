@@ -52,5 +52,11 @@ Array.prototype.myForEach = function (cb) {
   }
 };
 
-// PROMISE
-// Promise.prototype.Promise = function (cb)
+// AT
+Array.prototype.myAt = function (index) {
+  let num = Number(index);
+  let len = this.length;
+  if (Number.isNaN(num)) num = 0; // handles  non integer elements
+  if (num < -len || num >= len) return;
+  return this[(num + len) % len];
+};
