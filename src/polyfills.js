@@ -14,13 +14,14 @@ Array.prototype.myMap = function (callbackFn, thisArg) {
   }
   return arr;
 };
+
 // FILTER
 Array.prototype.myFilter = function (callbackFn, thisArg) {
   // thisArg is the this env for callbackFn, it is optional
   let arr = [];
   for (let i = 0; i < this.length; i++) {
     if (
-      Object.hasOwn(this, i) && // this checks for sparse elemnts like [1,,3]
+      i in this && // this checks for sparse elemnts like [1,,3]
       callbackFn.call(thisArg, this[i], i, this)
     ) {
       // we use .call since we have to pass thisArg as this to callbackFn if it is passed
