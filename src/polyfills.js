@@ -45,7 +45,9 @@ Array.prototype.myReduce = function (cb, acc) {
   }
 
   for (let i = startIndex; i < this.length; i++) {
-    val = cb(val, this[i], i, this);
+    if (i in this) {
+      val = cb(val, this[i], i, this);
+    }
   }
 
   return val;
