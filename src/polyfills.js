@@ -91,3 +91,13 @@ Function.prototype.myApply = function (thisArg, args = []) {
 
   return context[sym](...args);
 };
+
+Function.prototype.myBind = function (thisArg, ...parentArgs) {
+  const sym = Symbol();
+  const context = Object(thisArg);
+  context[sym] = this;
+
+  return function (...fnArgs) {
+    return context[sym](...parentArgs, ...fnArgs);
+  };
+};
