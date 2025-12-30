@@ -104,3 +104,38 @@ Function.prototype.myBind = function (thisArg, ...parentArgs) {
     return context[sym](...parentArgs, ...fnArgs);
   };
 };
+
+// Promise.all
+export default function promiseAll(iterable) {
+  // Promise.all itself returns a new Promise
+  return new Promise((resolve, reject) => {
+    if (iterable.length === 0) {
+      // Edge case: if input array is empty, resolve with empty array
+      resolve([]);
+      return;
+    }
+
+    let res = [];
+    let completedCount = 0;
+
+    for (let i = 0; i < iterable.length; i++) {
+      // Wrapping with .resolve ensures non-promises are handled
+      Promise.resolve(iterable[i])
+        .then((response) => {
+          res[i] = response; // Order must match the original iterable
+          completedCount++;
+
+          // If all promises have resolved, resolve the final result array
+          if (completedCount === iterable.length) {
+            resolve(res);
+            return;
+          }
+        })
+        .catch((err) => {
+          // If any promise rejects, immediately reject the outer promise
+          reject(err);
+          return;
+        });
+    }
+  });
+}
