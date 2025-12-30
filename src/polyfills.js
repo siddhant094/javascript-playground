@@ -68,3 +68,17 @@ Array.prototype.myAt = function (index) {
   if (num < -len || num >= len) return;
   return this[(num + len) % len];
 };
+
+Function.prototype.myCall = function (thisArg, ...argArray) {
+  const context = thisArg ?? globalThis; // if thisArg not porvided, fallback to global this object
+  const obj = new Object(context); // create an object of the context
+
+  const sym = Symbol();
+  obj[sym] = this;
+
+  // We use Symbol instead of ctx.fn to avoid property name collisions and side effects.
+  // Symbols create unique, non-enumerable keys, allowing us to temporarily attach a function without mutating or interfering with the target object’s existing properties.
+  // Symbols were specifically designed for safe object extension and polyfills.
+
+  return obj[sym](...argArray);
+};
