@@ -69,6 +69,7 @@ Array.prototype.myAt = function (index) {
   return this[(num + len) % len];
 };
 
+// CALL
 Function.prototype.myCall = function (thisArg, ...argArray) {
   const context = thisArg ?? globalThis; // if thisArg not porvided, fallback to global this object
   const obj = new Object(context); // create an object of the context
@@ -83,6 +84,7 @@ Function.prototype.myCall = function (thisArg, ...argArray) {
   return obj[sym](...argArray);
 };
 
+// APPLY
 Function.prototype.myApply = function (thisArg, args = []) {
   const sym = Symbol();
   const context = Object(thisArg);
@@ -92,6 +94,7 @@ Function.prototype.myApply = function (thisArg, args = []) {
   return context[sym](...args);
 };
 
+// BIND
 Function.prototype.myBind = function (thisArg, ...parentArgs) {
   const sym = Symbol();
   const context = Object(thisArg);
