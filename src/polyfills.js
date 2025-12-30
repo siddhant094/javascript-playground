@@ -82,3 +82,12 @@ Function.prototype.myCall = function (thisArg, ...argArray) {
 
   return obj[sym](...argArray);
 };
+
+Function.prototype.myApply = function (thisArg, args = []) {
+  const sym = Symbol();
+  const context = Object(thisArg);
+
+  context[sym] = this;
+
+  return context[sym](...args);
+};
