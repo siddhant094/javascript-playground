@@ -106,7 +106,7 @@ Function.prototype.myBind = function (thisArg, ...parentArgs) {
 };
 
 // Promise.all
-export default function promiseAll(iterable) {
+function promiseAll(iterable) {
   // Promise.all itself returns a new Promise
   return new Promise((resolve, reject) => {
     if (iterable.length === 0) {
@@ -138,4 +138,88 @@ export default function promiseAll(iterable) {
         });
     }
   });
+}
+
+// Promise.allSettled
+export default function promiseAllSettled(iterable) {
+  return new Promise((resolve) => {
+    if (iterable.length === 0) return resolve([]);
+
+    const promisesArray = new Array(iterable.length);
+    let completedPromise = 0;
+
+    for (let i = 0; i < iterable.length; i++) {
+      Promise.resolve(iterable[i])
+        .then((res) => {
+          promisesArray[i] = {
+            status: "fulfilled",
+            value: res,
+          };
+        })
+        .catch((err) => {
+          promisesArray[i] = {
+            status: "rejected",
+            reason: err,
+          };
+        })
+        .finally(() => {
+          completedPromise++;
+          if (completedPromise === iterable.length)
+            return resolve(promisesArray);
+        });
+    }
+  });
+}
+
+//Promise.any
+export default function promiseAny(iterable) {
+  return new Promise((resolve, reject) => {
+    if (iterable.length === 0) {
+      return reject(new AggregateError([]));
+    }
+
+    const errorArr = new Array(iterable.length);
+    let errorLength = 0;
+
+    for (let i = 0; i < iterable.length; i++) {
+      Promise.resolve(iterable[i])
+        .then((res) => {
+          return resolve(res);
+        })
+        .catch((err) => {
+          errorLength++;
+          errorArr[i] = err;
+        })
+        .finally(() => {
+          if (errorLength === iterable.length) {
+            return reject(new AggregateError(errorArr));
+          }
+        });
+    }
+  });
+}
+
+// Promise.race
+export default function promiseRace(iterable) {
+  return new Promise((resolve, reject) => {
+    iterable.forEach((item) => {
+      Promise.resolve(item)
+      .then((resp) => resolve(resp),
+      (resp) => reject(resp)) // 2nd argument of .then is reject
+      // a shorter onliner syntax is 
+      // iterable.forEach(item => Promise.resolve(item).then(resolve, reject))     
+    })
+  })
+}
+
+// Promise.reject
+export default function promiseReject(reason) {
+  return new Promise((_, reject) => reject(reason))
+}
+
+// Promise.resolve
+export default function promiseResolve(value) {
+  if (value instanceof Promise) return value; // if this is removed then we wrap an existing Promise unnecessarily,
+  // You lose identity, Extra microtask + memory overhead
+  return new Promise((resolve) => resolve(value));
 }

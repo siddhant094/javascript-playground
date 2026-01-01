@@ -1,7 +1,14 @@
 console.log("playground initialised v2");
 
 let count = 0;
-const expensiveFn = (e) => console.table([{ COUNT: ++count, WIDTH: e?.target?.innerWidth, HEIGHT: e?.target?.innerHeight }]);
+const expensiveFn = (e) =>
+  console.table([
+    {
+      COUNT: ++count,
+      WIDTH: e?.target?.innerWidth,
+      HEIGHT: e?.target?.innerHeight,
+    },
+  ]);
 // const expensiveFn = () => console.log("called");
 
 const throttle = (handlerFn, delay) => {
