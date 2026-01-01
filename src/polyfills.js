@@ -106,7 +106,7 @@ Function.prototype.myBind = function (thisArg, ...parentArgs) {
 };
 
 // Promise.all
-function promiseAll(iterable) {
+export default function promiseAll(iterable) {
   // Promise.all itself returns a new Promise
   return new Promise((resolve, reject) => {
     if (iterable.length === 0) {
